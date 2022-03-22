@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
+  HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
@@ -10,56 +10,55 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { AddProductRequestDto } from './dto/add.product.request.dto';
-import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import {
+  ApiBadRequestResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Product } from '../../domain/product';
 
+@ApiTags('product')
 @Controller('product')
 export class ProductController {
-  constructor(
-    private readonly productService: ProductService,
-    private readonly amqpConnection: AmqpConnection,
-  ) {}
+  constructor(private readonly productService: ProductService) {}
 
+  @ApiOperation({ summary: 'Add product' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success message',
+    type: String,
+  })
+  @ApiBadRequestResponse({ description: 'Something wrong' })
+  @HttpCode(HttpStatus.CREATED)
   @Post('add')
-  async add(@Body() body: AddProductRequestDto) {
-    const data: any = await this.amqpConnection.request({
-      exchange: 'amq.direct',
-      routingKey: 'product.add.route',
-      payload: body,
-    });
-
-    console.log(data.error);
-    if (data.status === HttpStatus.CREATED) {
-      return data.payload;
-    }
-    throw new HttpException(data.error.message, data.status);
+  async add(@Body() addProductDto: AddProductRequestDto): Promise<string> {
+    return this.productService.add(addProductDto);
   }
 
+  @ApiOperation({ summary: 'Get all products' })
+  @ApiResponse({
+    status: 200,
+    description: 'All products',
+    type: [Product],
+  })
+  @ApiBadRequestResponse({ description: 'Something wrong' })
+  @HttpCode(HttpStatus.OK)
   @Get('get-all')
-  async getAll() {
-    const data: any = await this.amqpConnection.request({
-      exchange: 'amq.direct',
-      routingKey: 'product.get.all.route',
-    });
-
-    console.log(data);
-    if (data.status === HttpStatus.OK) {
-      return data.payload;
-    }
-    throw new HttpException(data.error.message, data.status);
+  async getAll(): Promise<Product[]> {
+    return this.productService.getAll();
   }
 
+  @ApiOperation({ summary: 'Get product by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Product by id',
+    type: Product,
+  })
+  @ApiBadRequestResponse({ description: 'Something wrong' })
+  @HttpCode(HttpStatus.OK)
   @Get('get/:id')
-  async getById(@Param('id', ParseIntPipe) id: number) {
-    const data: any = await this.amqpConnection.request({
-      exchange: 'amq.direct',
-      routingKey: 'product.get.by.id.route',
-      payload: id,
-    });
-
-    console.log(data);
-    if (data.status === HttpStatus.OK) {
-      return data.payload;
-    }
-    throw new HttpException(data.error.message, data.status);
+  async getById(@Param('id', ParseIntPipe) id: number): Promise<Product> {
+    return this.productService.getById(id);
   }
 }

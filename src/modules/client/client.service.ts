@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { ClientLoginRequestDto } from './dto/client-login.request.dto';
-import { ClientLoginResponseDto } from './dto/client-login.response.dto';
 import { ClientRegistrationRequestDto } from './dto/client-registration.request.dto';
 import { RmqResponse } from '../../../libs/common/rmq/rmq.response';
+import { RmqClientLoginResponseDto } from './dto/rmq-client-login.response.dto';
 
 @Injectable()
 export class ClientService {
@@ -11,9 +11,9 @@ export class ClientService {
 
   async login(
     loginDto: ClientLoginRequestDto,
-  ): Promise<ClientLoginResponseDto> {
+  ): Promise<RmqClientLoginResponseDto> {
     // @ts-ignore
-    const data: RmqResponse<ClientLoginResponseDto> =
+    const data: RmqResponse<RmqClientLoginResponseDto> =
       await this.amqpConnection.request({
         exchange: 'amq.direct',
         routingKey: 'client.login.route',
