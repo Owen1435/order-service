@@ -16,7 +16,6 @@ export class ProductService {
       payload: addProductDto,
     });
 
-    console.log(data);
     if (data.status === HttpStatus.CREATED) {
       return data.payload;
     }
@@ -30,7 +29,6 @@ export class ProductService {
       routingKey: 'product.get.all.route',
     });
 
-    console.log(data);
     if (data.status === HttpStatus.OK) {
       return data.payload;
     }
@@ -45,7 +43,6 @@ export class ProductService {
       payload: id,
     });
 
-    console.log(data);
     if (data.status === HttpStatus.OK) {
       return data.payload;
     }

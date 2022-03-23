@@ -8,7 +8,7 @@ export const rmqConfig = {
   useFactory: async (configService: ConfigService) => ({
     exchanges: [],
     uri: configService.get('RMQ_URI'),
-    enableControllerDiscovery: true,
+    // enableControllerDiscovery: true,
   }),
 };
 
