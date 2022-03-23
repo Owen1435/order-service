@@ -1,7 +1,8 @@
-import { ProductTypeEnum } from '../../../domain/enum/product-type.enum';
-import { ProductStatusEnum } from '../../../domain/enum/product-status.enum';
+import { ProductTypeEnum } from '../../../../libs/domain/enum/product-type.enum';
+import { ProductStatusEnum } from '../../../../libs/domain/enum/product-status.enum';
 import { IsNotEmpty, IsEnum, IsPositive } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ProductDescription } from '../../../../libs/domain/product/product';
 
 export class AddProductRequestDto {
   @ApiProperty({
@@ -37,5 +38,5 @@ export class AddProductRequestDto {
     description: 'Product description',
     example: '{"color": "black"}',
   })
-  description?: object; //todo
+  description?: ProductDescription;
 }

@@ -5,6 +5,7 @@ import { RmqModule } from '../libs/common/rmq/rmq.module';
 import { OrmModule } from '../libs/common/orm/orm.module';
 import { ClientModule } from './modules/client/client.module';
 import { ProductModule } from './modules/product/product.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ProductModule } from './modules/product/product.module';
     RmqModule,
     ClientModule,
     ProductModule,
+    OrderModule,
   ],
   controllers: [AppController],
 })

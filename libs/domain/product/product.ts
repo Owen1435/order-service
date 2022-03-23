@@ -1,13 +1,15 @@
 import { ProductStatus } from './product-status';
 import { ProductType } from './product-type';
+import { Car } from './car';
 
 export class Product {
   id: number;
   title: string;
-  description: object;
   price: number;
+  category: string;
   status: ProductStatus;
   type: ProductType;
-  childCategory: string;
-  parentCategory: string;
+  description: ProductDescription;
 }
+
+export type ProductDescription = Car;

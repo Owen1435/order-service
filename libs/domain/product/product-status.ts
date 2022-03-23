@@ -1,4 +1,4 @@
-import { ProductStatusEnum } from './enum/product-status.enum';
+import { ProductStatusEnum } from '../enum/product-status.enum';
 
 export class ProductStatus {
   id: number;

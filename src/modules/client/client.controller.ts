@@ -23,8 +23,8 @@ export class ClientController {
 
   @ApiOperation({ summary: 'Login' })
   @ApiResponse({
-    status: 200,
-    description: 'Success login',
+    status: HttpStatus.OK,
+    description: 'Set cooke jwt token',
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
@@ -43,8 +43,8 @@ export class ClientController {
 
   @ApiOperation({ summary: 'Registration' })
   @ApiResponse({
-    status: 201,
-    description: 'Success registration',
+    status: HttpStatus.CREATED,
+    description: 'Success message',
     type: String,
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })

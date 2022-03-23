@@ -16,7 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Product } from '../../domain/product';
+import { Product } from '../../../libs/domain/product/product';
 
 @ApiTags('product')
 @Controller('product')
@@ -25,7 +25,7 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Add product' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.CREATED,
     description: 'Success message',
     type: String,
   })
@@ -38,7 +38,7 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'All products',
     type: [Product],
   })
@@ -51,7 +51,7 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Get product by id' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'Product by id',
     type: Product,
   })
