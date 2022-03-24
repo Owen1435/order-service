@@ -11,4 +11,9 @@ export class ProductEntity {
     type: 'varchar',
   })
   title: string;
+
+  @Column({
+    type: 'numeric',
+  })
+  price: number;
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsArray, IsPositive, IsInt } from 'class-validator';
 
-class Position {
+export class Position {
   @ApiProperty({
     description: 'Product id',
     example: 1,

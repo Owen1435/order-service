@@ -15,6 +15,16 @@ export class OrderEntity extends BaseEntity {
   })
   status: string;
 
+  @Column({
+    type: 'numeric',
+  })
+  price: number;
+
+  @Column({
+    type: 'numeric',
+  })
+  discount: number;
+
   @ManyToOne(() => ClientEntity, (client) => client.id)
   client: ClientEntity;
 
