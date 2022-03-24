@@ -10,9 +10,9 @@ export class ClientHandler {
   constructor(private readonly clientRepository: ClientRepository) {}
 
   @RabbitSubscribe({
-    exchange: 'amq.direct',
-    routingKey: 'client.registered.route',
-    queue: 'client.registered.queue',
+    exchange: 'client.registered.exchange',
+    routingKey: '',
+    queue: 'client.registered.queue.order-service',
   })
   async add(dto: RmqClientRegisteredResponseDto) {
     const client = plainToClass(Client, {

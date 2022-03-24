@@ -44,7 +44,7 @@ export class ProductController {
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
-  @Get('get-all')
+  @Get('get')
   async getAll(): Promise<Product[]> {
     return this.productService.getAll();
   }

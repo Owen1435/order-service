@@ -10,9 +10,9 @@ export class ProductHandler {
   constructor(private readonly productRepository: ProductRepository) {}
 
   @RabbitSubscribe({
-    exchange: 'amq.direct',
-    routingKey: 'product.added.route',
-    queue: 'product.added.queue',
+    exchange: 'product.added.exchange',
+    routingKey: '',
+    queue: 'product.added.queue.order-service',
   })
   async add(dto: RmqProductAddedResponseDto) {
     const product = plainToClass(Product, {

@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { Order } from '../../../libs/domain/order/order';
 import { ChangeOrderStatusRequestDto } from './dto/change-order-status.request.dto';
+import { OrderEntity } from '../../entity/order.entity';
 
 @ApiTags('order')
 @Controller('order')
@@ -41,27 +42,27 @@ export class OrderController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'All orders',
-    type: [Order],
+    type: [OrderEntity],
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
-  @Get('get-all')
-  async getAll(): Promise<Order[]> {
-    return null;
-    // return this.orderService.getAll();
+  @Get('get')
+  async getAll(): Promise<OrderEntity[]> {
+    return this.orderService.getAll();
   }
 
   @ApiOperation({ summary: 'Get order by id' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Order',
-    type: Order,
+    type: OrderEntity,
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @Get('get/:id')
-  async getById(@Param('id', ParseIntPipe) orderId: number): Promise<Order> {
-    return null;
-    // return this.orderService.getById(orderId);
+  async getById(
+    @Param('id', ParseIntPipe) orderId: number,
+  ): Promise<OrderEntity> {
+    return this.orderService.getById(orderId);
   }
 
   @ApiOperation({ summary: 'Change status' })
@@ -76,7 +77,6 @@ export class OrderController {
   async changeStatus(
     @Body() changeStatusDto: ChangeOrderStatusRequestDto,
   ): Promise<string> {
-    return null;
-    // return this.orderService.changeStatus(changeStatusDto);
+    return this.orderService.changeStatus(changeStatusDto);
   }
 }

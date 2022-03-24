@@ -5,10 +5,14 @@ import { ProductRepository } from '../product/product.repository';
 import { ClientRepository } from '../client/client.repository';
 import { OrderEntity } from '../../entity/order.entity';
 import { PositionRepository } from './position.repository';
+import { ChangeOrderStatusRequestDto } from './dto/change-order-status.request.dto';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class OrderService {
   constructor(
+    private readonly amqpConnection: AmqpConnection,
     private readonly orderRepository: OrderRepository,
     private readonly productRepository: ProductRepository,
     private readonly clientRepository: ClientRepository,
@@ -21,35 +25,60 @@ export class OrderService {
       throw new HttpException('Client was not found', HttpStatus.NOT_FOUND);
     }
 
-    for (const productId of createDto.productIds) {
-      const product = await this.productRepository.findOne(productId);
+    for (const position of createDto.positions) {
+      const product = await this.productRepository.findOne(position.productId);
       if (!product) {
         throw new HttpException(
-          `Product with id:${productId} was not found`,
+          `Product with id:${position.productId} was not found`,
           HttpStatus.NOT_FOUND,
         );
       }
     }
 
-    const order = new OrderEntity();
-    order.date = new Date();
-    order.client = client;
+    const order = plainToClass(OrderEntity, {
+      date: new Date(),
+      status: 'default',
+      client,
+    });
 
     const savedOrder = await this.orderRepository.save(order);
 
     //todo
-    createDto.productIds.forEach((productId) => {
+    createDto.positions.forEach((position) => {
       this.positionRepository.save({
         order: savedOrder,
-        product: { id: productId },
-        count: 1,
+        product: { id: position.productId },
+        count: position.count,
       });
     });
 
-    return 'Ssdfadsfs';
+    this.amqpConnection.publish('order.created.exchange', '', client.id);
+
+    return 'Order created';
   }
 
-  // const orders = await this.orderRepository.find({
-  //   relations: ['client', 'positions', 'positions.product'],
-  // });
+  async getAll(): Promise<OrderEntity[]> {
+    return await this.orderRepository.find({
+      relations: ['client', 'positions', 'positions.product'],
+    });
+  }
+
+  async getById(orderId: number) {
+    return await this.orderRepository.findOne(orderId, {
+      relations: ['client', 'positions', 'positions.product'],
+    });
+  }
+
+  async changeStatus(changeStatusDto: ChangeOrderStatusRequestDto) {
+    const order = await this.orderRepository.findOne(changeStatusDto.orderId);
+    if (!order) {
+      throw new HttpException(`Order was not found`, HttpStatus.NOT_FOUND);
+    }
+
+    await this.orderRepository.update(changeStatusDto.orderId, {
+      status: changeStatusDto.status,
+    });
+
+    return 'Order status changed';
+  }
 }

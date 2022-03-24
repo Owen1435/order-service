@@ -10,6 +10,11 @@ export class OrderEntity extends BaseEntity {
   })
   date: Date;
 
+  @Column({
+    type: 'varchar',
+  })
+  status: string;
+
   @ManyToOne(() => ClientEntity, (client) => client.id)
   client: ClientEntity;
 
