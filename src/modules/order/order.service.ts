@@ -1,8 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import {
-  CreateOrderRequestDto,
-  Position,
-} from './dto/create-order.request.dto';
+import { CreateOrderRequestDto } from './dto/create-order.request.dto';
 import { OrderRepository } from './order.repository';
 import { ProductRepository } from '../product/product.repository';
 import { ClientRepository } from '../client/client.repository';
@@ -12,6 +9,7 @@ import { ChangeOrderStatusRequestDto } from './dto/change-order-status.request.d
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { plainToClass } from 'class-transformer';
 import { RmqResponse } from '../../../libs/common/rmq/rmq.response';
+import { PriceService } from '../price/price.service';
 
 @Injectable()
 export class OrderService {
@@ -21,6 +19,7 @@ export class OrderService {
     private readonly productRepository: ProductRepository,
     private readonly clientRepository: ClientRepository,
     private readonly positionRepository: PositionRepository,
+    private readonly priceService: PriceService,
   ) {}
 
   async create(
@@ -49,17 +48,17 @@ export class OrderService {
         routingKey: 'client.get.discount.route',
         payload: client.id,
       });
-    const discount = discountResponse.payload;
+    const userDiscount = discountResponse.payload;
 
-    const orderPrice = await this.calculateOrderPrice(
-      discount,
-      createDto.positions,
-    );
+    const orderPrice = await this.priceService.calculateOrderPrice({
+      positions: createDto.positions,
+      discount: userDiscount,
+    });
     const order = plainToClass(OrderEntity, {
       date: new Date(),
       status: 'default',
       price: orderPrice,
-      discount,
+      discount: userDiscount,
       client,
     });
     const savedOrder = await this.orderRepository.save(order);
@@ -111,20 +110,5 @@ export class OrderService {
     });
 
     return 'Order status changed';
-  }
-
-  private async calculateOrderPrice(
-    discount: number,
-    positions: Position[],
-  ): Promise<number> {
-    const discountCoefficient = 1 - discount / 100;
-
-    let sum = 0;
-    for (const position of positions) {
-      const product = await this.productRepository.findOne(position.productId);
-      sum += Number(product.price);
-    }
-
-    return sum * discountCoefficient;
   }
 }

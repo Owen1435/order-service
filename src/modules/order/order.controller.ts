@@ -20,10 +20,10 @@ import {
 import { ChangeOrderStatusRequestDto } from './dto/change-order-status.request.dto';
 import { OrderEntity } from '../../entity/order.entity';
 import { GetJwtDecorator } from '../../../libs/common/decorators/get-jwt.decorator';
-import { ClientJwtRequestDto } from './dto/client-jwt.request.dto';
 import { AuthGuard } from '../../../libs/common/guards/auth.guard';
 import { Roles } from 'libs/common/decorators/roles-auth.decorator';
 import { RolesGuard } from 'libs/common/guards/roles.guard';
+import { ClientJwt } from '../../../libs/domain/client-service/client-jwt';
 
 @UseGuards(AuthGuard)
 @ApiTags('order')
@@ -42,7 +42,7 @@ export class OrderController {
   @Post('create')
   async create(
     @Body() createDto: CreateOrderRequestDto,
-    @GetJwtDecorator() client: ClientJwtRequestDto,
+    @GetJwtDecorator() client: ClientJwt,
   ): Promise<string> {
     return this.orderService.create(createDto, client.id);
   }
@@ -56,9 +56,7 @@ export class OrderController {
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
   @Get('get')
-  async getAll(
-    @GetJwtDecorator() client: ClientJwtRequestDto,
-  ): Promise<OrderEntity[]> {
+  async getAll(@GetJwtDecorator() client: ClientJwt): Promise<OrderEntity[]> {
     return this.orderService.getAll(client.id);
   }
 
@@ -72,7 +70,7 @@ export class OrderController {
   @Get('get/:id')
   async getById(
     @Param('id', ParseIntPipe) orderId: number,
-    @GetJwtDecorator() client: ClientJwtRequestDto,
+    @GetJwtDecorator() client: ClientJwt,
   ): Promise<OrderEntity> {
     return this.orderService.getById(orderId, client.id);
   }

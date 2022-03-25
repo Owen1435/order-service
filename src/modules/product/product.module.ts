@@ -15,5 +15,6 @@ import { jwtConfig } from '../../../libs/common/jwt/jwt.config';
   ],
   providers: [ProductService, ProductHandler],
   controllers: [ProductController],
+  exports: [TypeOrmModule],
 })
 export class ProductModule {}

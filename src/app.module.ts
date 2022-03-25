@@ -6,6 +6,7 @@ import { OrmModule } from '../libs/common/orm/orm.module';
 import { ClientModule } from './modules/client/client.module';
 import { ProductModule } from './modules/product/product.module';
 import { OrderModule } from './modules/order/order.module';
+import { PriceModule } from './modules/price/price.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { OrderModule } from './modules/order/order.module';
     ClientModule,
     ProductModule,
     OrderModule,
+    PriceModule,
   ],
   controllers: [AppController],
 })

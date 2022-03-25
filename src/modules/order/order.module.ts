@@ -9,6 +9,7 @@ import { ClientRepository } from '../client/client.repository';
 import { PositionRepository } from './position.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from '../../../libs/common/jwt/jwt.config';
+import { PriceModule } from '../price/price.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { jwtConfig } from '../../../libs/common/jwt/jwt.config';
       ClientRepository,
       PositionRepository,
     ]),
+    PriceModule,
   ],
   controllers: [OrderController],
   providers: [OrderService],

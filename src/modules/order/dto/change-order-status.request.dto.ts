@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsInt, IsPositive } from 'class-validator';
 
 export class ChangeOrderStatusRequestDto {
   @ApiProperty({
@@ -7,6 +7,8 @@ export class ChangeOrderStatusRequestDto {
     example: '1',
   })
   @IsNotEmpty()
+  @IsPositive()
+  @IsInt()
   orderId: number;
 
   @ApiProperty({
