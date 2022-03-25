@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderRequestDto } from './dto/create-order.request.dto';
@@ -16,10 +17,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Order } from '../../../libs/domain/order/order';
 import { ChangeOrderStatusRequestDto } from './dto/change-order-status.request.dto';
 import { OrderEntity } from '../../entity/order.entity';
+import { GetJwtDecorator } from '../../../libs/common/decorators/get-jwt.decorator';
+import { ClientJwtRequestDto } from './dto/client-jwt.request.dto';
+import { AuthGuard } from '../../../libs/common/guards/auth.guard';
+import { Roles } from 'libs/common/decorators/roles-auth.decorator';
+import { RolesGuard } from 'libs/common/guards/roles.guard';
 
+@UseGuards(AuthGuard)
 @ApiTags('order')
 @Controller('order')
 export class OrderController {
@@ -34,8 +40,11 @@ export class OrderController {
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
-  async create(@Body() createDto: CreateOrderRequestDto): Promise<string> {
-    return this.orderService.create(createDto);
+  async create(
+    @Body() createDto: CreateOrderRequestDto,
+    @GetJwtDecorator() client: ClientJwtRequestDto,
+  ): Promise<string> {
+    return this.orderService.create(createDto, client.id);
   }
 
   @ApiOperation({ summary: 'Get all orders' })
@@ -47,8 +56,10 @@ export class OrderController {
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
   @Get('get')
-  async getAll(): Promise<OrderEntity[]> {
-    return this.orderService.getAll();
+  async getAll(
+    @GetJwtDecorator() client: ClientJwtRequestDto,
+  ): Promise<OrderEntity[]> {
+    return this.orderService.getAll(client.id);
   }
 
   @ApiOperation({ summary: 'Get order by id' })
@@ -61,8 +72,9 @@ export class OrderController {
   @Get('get/:id')
   async getById(
     @Param('id', ParseIntPipe) orderId: number,
+    @GetJwtDecorator() client: ClientJwtRequestDto,
   ): Promise<OrderEntity> {
-    return this.orderService.getById(orderId);
+    return this.orderService.getById(orderId, client.id);
   }
 
   @ApiOperation({ summary: 'Change status' })
@@ -73,6 +85,8 @@ export class OrderController {
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
+  @Roles('admin')
+  @UseGuards(RolesGuard)
   @Post('change-status')
   async changeStatus(
     @Body() changeStatusDto: ChangeOrderStatusRequestDto,

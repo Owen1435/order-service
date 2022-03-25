@@ -7,9 +7,12 @@ import { OrderRepository } from './order.repository';
 import { ProductRepository } from '../product/product.repository';
 import { ClientRepository } from '../client/client.repository';
 import { PositionRepository } from './position.repository';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConfig } from '../../../libs/common/jwt/jwt.config';
 
 @Module({
   imports: [
+    JwtModule.register(jwtConfig),
     TypeOrmModule.forFeature([
       OrderEntity,
       OrderRepository,

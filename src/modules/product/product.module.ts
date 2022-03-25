@@ -5,9 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from '../../entity/product.entity';
 import { ProductHandler } from './product.handler';
 import { ProductRepository } from './product.repository';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConfig } from '../../../libs/common/jwt/jwt.config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductEntity, ProductRepository])],
+  imports: [
+    JwtModule.register(jwtConfig),
+    TypeOrmModule.forFeature([ProductEntity, ProductRepository]),
+  ],
   providers: [ProductService, ProductHandler],
   controllers: [ProductController],
 })

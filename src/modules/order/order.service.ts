@@ -23,8 +23,11 @@ export class OrderService {
     private readonly positionRepository: PositionRepository,
   ) {}
 
-  async create(createDto: CreateOrderRequestDto): Promise<string> {
-    const client = await this.clientRepository.findOne(createDto.clientId);
+  async create(
+    createDto: CreateOrderRequestDto,
+    clientId: number,
+  ): Promise<string> {
+    const client = await this.clientRepository.findOne(clientId);
     if (!client) {
       throw new HttpException('Client was not found', HttpStatus.NOT_FOUND);
     }
@@ -75,15 +78,25 @@ export class OrderService {
     return 'Order created';
   }
 
-  async getAll(): Promise<OrderEntity[]> {
+  async getAll(clientId: number): Promise<OrderEntity[]> {
     return await this.orderRepository.find({
       relations: ['client', 'positions', 'positions.product'],
+      where: {
+        client: {
+          id: clientId,
+        },
+      },
     });
   }
 
-  async getById(orderId: number) {
+  async getById(orderId: number, clientId: number) {
     return await this.orderRepository.findOne(orderId, {
       relations: ['client', 'positions', 'positions.product'],
+      where: {
+        client: {
+          id: clientId,
+        },
+      },
     });
   }
 

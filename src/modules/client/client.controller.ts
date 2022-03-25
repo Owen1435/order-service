@@ -33,7 +33,7 @@ export class ClientController {
     @Body() loginDto: ClientLoginRequestDto,
     @Res() response,
   ): Promise<void> {
-    const token = await this.clientService.login(loginDto);
+    const { token } = await this.clientService.login(loginDto);
     response.cookie('jwt', token, {
       sameSite: 'none',
       secure: true,

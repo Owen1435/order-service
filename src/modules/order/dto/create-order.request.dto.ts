@@ -21,13 +21,6 @@ export class Position {
 
 export class CreateOrderRequestDto {
   @ApiProperty({
-    description: 'New order status',
-    example: 1,
-  })
-  @IsNotEmpty()
-  clientId: number;
-
-  @ApiProperty({
     description: 'Order positions',
     type: [Position],
   })

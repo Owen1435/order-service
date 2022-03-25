@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { AddProductRequestDto } from './dto/add.product.request.dto';
@@ -17,7 +18,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Product } from '../../../libs/domain/product/product';
+import { AuthGuard } from '../../../libs/common/guards/auth.guard';
+import { Roles } from '../../../libs/common/decorators/roles-auth.decorator';
+import { RolesGuard } from '../../../libs/common/guards/roles.guard';
 
+@UseGuards(AuthGuard)
 @ApiTags('product')
 @Controller('product')
 export class ProductController {
@@ -31,6 +36,8 @@ export class ProductController {
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.CREATED)
+  @Roles('admin')
+  @UseGuards(RolesGuard)
   @Post('add')
   async add(@Body() addProductDto: AddProductRequestDto): Promise<string> {
     return this.productService.add(addProductDto);
