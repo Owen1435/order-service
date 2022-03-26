@@ -72,7 +72,7 @@ export class OrderService {
       });
     }
 
-    this.amqpConnection.publish('order.created.exchange', '', client.id);
+    this.amqpConnection.publish('order.created.exchange', '', savedOrder);
 
     return 'Order created';
   }
