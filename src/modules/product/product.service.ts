@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AddProductRequestDto } from './dto/add.product.request.dto';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { RmqResponse } from '../../../libs/common/rmq/rmq.response';
-import { Product } from '../../../libs/domain/product/product';
+import { Product } from '../../../libs/domain/product-service/product';
 
 @Injectable()
 export class ProductService {

@@ -2,7 +2,7 @@ import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { ProductRepository } from './product.repository';
-import { Product } from '../../../libs/domain/order/product';
+import { Product } from '../../../libs/domain/order-service/product';
 import { RmqProductAddedResponseDto } from './dto/rmq-product-added.response.dto';
 
 @Injectable()

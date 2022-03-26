@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Product } from '../../../libs/domain/product/product';
+import { Product } from '../../../libs/domain/product-service/product';
 import { AuthGuard } from '../../../libs/common/guards/auth.guard';
 import { Roles } from '../../../libs/common/decorators/roles-auth.decorator';
 import { RolesGuard } from '../../../libs/common/guards/roles.guard';

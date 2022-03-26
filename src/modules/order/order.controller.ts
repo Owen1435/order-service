@@ -18,12 +18,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ChangeOrderStatusRequestDto } from './dto/change-order-status.request.dto';
-import { OrderEntity } from '../../entity/order.entity';
 import { GetJwtDecorator } from '../../../libs/common/decorators/get-jwt.decorator';
 import { AuthGuard } from '../../../libs/common/guards/auth.guard';
 import { Roles } from 'libs/common/decorators/roles-auth.decorator';
 import { RolesGuard } from 'libs/common/guards/roles.guard';
 import { ClientJwt } from '../../../libs/domain/client-service/client-jwt';
+import { Order } from '../../../libs/domain/order-service/order';
 
 @UseGuards(AuthGuard)
 @ApiTags('order')
@@ -47,35 +47,35 @@ export class OrderController {
     return this.orderService.create(createDto, client.id);
   }
 
-  @ApiOperation({ summary: 'Get all orders' })
+  @ApiOperation({ summary: 'Get all orders for client' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'All orders',
-    type: [OrderEntity],
+    type: [Order],
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @HttpCode(HttpStatus.OK)
   @Get('get')
-  async getAll(@GetJwtDecorator() client: ClientJwt): Promise<OrderEntity[]> {
+  async getAll(@GetJwtDecorator() client: ClientJwt): Promise<Order[]> {
     return this.orderService.getAll(client.id);
   }
 
-  @ApiOperation({ summary: 'Get order by id' })
+  @ApiOperation({ summary: 'Get order by id for client' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Order',
-    type: OrderEntity,
+    type: Order,
   })
   @ApiBadRequestResponse({ description: 'Something wrong' })
   @Get('get/:id')
   async getById(
     @Param('id', ParseIntPipe) orderId: number,
     @GetJwtDecorator() client: ClientJwt,
-  ): Promise<OrderEntity> {
+  ): Promise<Order> {
     return this.orderService.getById(orderId, client.id);
   }
 
-  @ApiOperation({ summary: 'Change status' })
+  @ApiOperation({ summary: 'Change order status' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Success message',

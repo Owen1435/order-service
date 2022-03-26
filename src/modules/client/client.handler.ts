@@ -1,7 +1,7 @@
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { ClientRepository } from './client.repository';
 import { RmqClientRegisteredResponseDto } from './dto/rmq-client-registered.response.dto';
-import { Client } from '../../../libs/domain/order/client';
+import { Client } from '../../../libs/domain/order-service/client';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 

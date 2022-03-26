@@ -11,10 +11,5 @@ export class Car {
   mileage?: number;
   @ApiProperty()
   releaseDate?: Date;
-  @ApiProperty()
-  color?: string; //todo enum
-  @ApiProperty()
-  bodyType?: string; //todo: enum
-  @ApiProperty()
-  engineType?: string; //todo: enum
+  // ...
 }

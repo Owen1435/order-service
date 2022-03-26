@@ -2,7 +2,7 @@ import { ProductTypeEnum } from '../../../../libs/domain/enum/product-type.enum'
 import { ProductStatusEnum } from '../../../../libs/domain/enum/product-status.enum';
 import { IsNotEmpty, IsEnum, IsPositive } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ProductDescription } from '../../../../libs/domain/product/product';
+import { ProductDescription } from '../../../../libs/domain/product-service/product';
 
 export class AddProductRequestDto {
   @ApiProperty({
