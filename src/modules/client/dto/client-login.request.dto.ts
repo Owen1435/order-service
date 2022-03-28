@@ -14,5 +14,5 @@ export class ClientLoginRequestDto {
     example: 's13sda31s',
   })
   @IsNotEmpty()
-  pass: string;
+  password: string;
 }

@@ -12,4 +12,10 @@ export class Product {
     example: 'Anything',
   })
   title: string;
+
+  @ApiProperty({
+    description: 'Product price',
+    example: 12312,
+  })
+  price: number;
 }

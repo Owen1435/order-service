@@ -4,6 +4,7 @@ import { plainToClass } from 'class-transformer';
 import { ProductRepository } from './product.repository';
 import { Product } from '../../../libs/domain/order-service/product';
 import { RmqProductAddedResponseDto } from './dto/rmq-product-added.response.dto';
+import { ProductEntity } from '../../entity/product.entity';
 
 @Injectable()
 export class ProductHandler {
@@ -15,9 +16,10 @@ export class ProductHandler {
     queue: 'product.added.queue.order-service',
   })
   async add(dto: RmqProductAddedResponseDto) {
-    const product = plainToClass(Product, {
+    const product = plainToClass(ProductEntity, {
       id: dto.product.id,
       title: dto.product.title,
+      price: dto.product.price,
     });
 
     await this.productRepository.save(product);

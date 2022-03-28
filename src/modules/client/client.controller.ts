@@ -39,6 +39,8 @@ export class ClientController {
       secure: true,
     });
     response.end();
+    // response.set({ Authorization: `Bearer ${token}` });
+    // response.end();
   }
 
   @ApiOperation({ summary: 'Registration' })
