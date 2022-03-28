@@ -10,6 +10,8 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { plainToClass } from 'class-transformer';
 import { RmqResponse } from '../../../libs/common/rmq/rmq.response';
 import { PriceService } from '../price/price.service';
+import { PositionEntity } from '../../entity/position.entity';
+import { DeepPartial } from 'typeorm';
 
 @Injectable()
 export class OrderService {
@@ -63,14 +65,18 @@ export class OrderService {
     });
     const savedOrder = await this.orderRepository.save(order);
 
-    //todo
-    for (const position of createDto.positions) {
-      await this.positionRepository.save({
-        order: savedOrder,
-        product: { id: position.productId },
+    const positions: DeepPartial<PositionEntity>[] = createDto.positions.map(
+      (position) => ({
         count: position.count,
-      });
-    }
+        product: { id: position.productId },
+        order: { id: savedOrder.id },
+      }),
+    );
+    await this.positionRepository.save(positions);
+
+    // const order = await this.orderRepository.findOne(savedOrder.id, {
+    //   relations: ['client', 'positions', 'positions.product'],
+    // });
 
     this.amqpConnection.publish('order.created.exchange', '', savedOrder);
 
