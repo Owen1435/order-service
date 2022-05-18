@@ -2,9 +2,9 @@ import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { ProductRepository } from './product.repository';
-import { Product } from '../../../libs/domain/order-service/product';
 import { RmqProductAddedResponseDto } from './dto/rmq-product-added.response.dto';
 import { ProductEntity } from '../../entity/product.entity';
+import { RmqProductEditedResponseDto } from './dto/rmq-product-edited.response.dto';
 
 @Injectable()
 export class ProductHandler {
@@ -24,5 +24,21 @@ export class ProductHandler {
 
     await this.productRepository.save(product);
     console.log('add', product);
+  }
+
+  @RabbitSubscribe({
+    exchange: 'product.edited.exchange',
+    routingKey: '',
+    queue: 'product.edited.queue.order-service',
+  })
+  async edit(dto: RmqProductEditedResponseDto) {
+    const product = plainToClass(ProductEntity, {
+      id: dto.product.id,
+      title: dto.product.title,
+      price: dto.product.price,
+    });
+
+    await this.productRepository.update(dto.product.id, product);
+    console.log('update', product);
   }
 }

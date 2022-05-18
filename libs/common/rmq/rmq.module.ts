@@ -11,6 +11,10 @@ const EXCHANGES = [
     name: 'product.added.exchange',
     type: 'fanout',
   },
+  {
+    name: 'product.edited.exchange',
+    type: 'fanout',
+  },
 ];
 
 export const rmqConfig = {
